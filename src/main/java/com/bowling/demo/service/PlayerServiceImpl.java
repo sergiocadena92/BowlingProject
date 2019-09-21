@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import com.bowling.demo.file.FileReader;
 import com.bowling.demo.model.Frame;
 import com.bowling.demo.model.Player;
+import com.bowling.demo.util.DoublyLinkedList;
+import com.bowling.demo.util.Node;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -34,7 +36,7 @@ public class PlayerServiceImpl implements PlayerService {
 			String score = playerScore[1];
 			if (data.containsKey(playerName)) {
 				Player player = data.get(playerName);
-				Frame frame = player.getFrames().getLast();
+				Node<Frame> frame = player.getFrames().getTail();
 				if (frame.isLastFrame()) {
 					if (frame.getFirstPinFall().equals(STRIKE_SCORE)) {
 						if (frame.isSecondPinFall()) {
@@ -86,7 +88,7 @@ public class PlayerServiceImpl implements PlayerService {
 		return playersScore;
 	}
 
-	private List<Player> calculateScore(List<Player> players) {
+/*	private List<Player> calculateScore(List<Player> players) {
 		int previousScore = 0;
 		for (Player player : players) {
 			for (int i = 0; i < player.getFrames().size(); i++) {
@@ -130,6 +132,18 @@ public class PlayerServiceImpl implements PlayerService {
 						previousScore = frame.getScore();
 					}
 
+				}
+			}
+		}
+		return players;
+	}*/
+	
+	private List<Player> calculateScore(List<Player> players) {
+		for (Player player : players) {
+			for (int i = 0; i < player.getFrames().size(); i++) {
+				Frame currentFrame = player.getFrames().get(i);
+				if (currentFrame.isStrike()) {
+					
 				}
 			}
 		}

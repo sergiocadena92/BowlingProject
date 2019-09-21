@@ -1,15 +1,15 @@
 package com.bowling.demo.model;
 
-import java.util.LinkedList;
+import com.bowling.demo.util.DoublyLinkedList;
 
 public class Player {
 
 	private String name;
-	private LinkedList<Frame> frames;
+	private DoublyLinkedList<Frame> frames;
 	
 	public Player(String name) {
 		this.name = name;
-		this.frames = new LinkedList<>();
+		this.frames = new DoublyLinkedList<>();
 	}
 
 	public String getName() {
@@ -20,8 +20,8 @@ public class Player {
 		this.name = name;
 	}
 
-	public LinkedList<Frame> getFrames() {
-		return new LinkedList<>(frames);
+	public DoublyLinkedList<Frame> getFrames() {
+		return frames;
 	}
 
 	public void addFrame(Frame frame) {
