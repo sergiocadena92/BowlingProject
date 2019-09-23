@@ -9,6 +9,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import com.bowling.demo.model.Player;
 import com.bowling.demo.print.Printer;
@@ -31,11 +33,15 @@ public class BowlingApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		String[] params = args.getSourceArgs();
-		if (params[0] != null) {
-			logger.info("File path:" + params[0]);
-			List<Player> data = playerService.parseDataFromFile(params[0]);
-			printer.print(data);
+		String filePath = "";
+		if (params.length > 0 && params[0] != null) {
+			filePath = params[0];
+		} else {
+			Resource resource = new ClassPathResource("data/data1.dat");
+			filePath = resource.getFile().getPath();
 		}
-		throw new Exception("File path must be passed as an argument from comand line");
+		logger.info("Application started with command line arguments: ", filePath);
+		List<Player> data = playerService.parseDataFromFile(filePath);
+		printer.print(data);
 	}
 }

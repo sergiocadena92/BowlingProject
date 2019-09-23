@@ -6,13 +6,19 @@ import org.springframework.stereotype.Component;
 
 import com.bowling.demo.model.Frame;
 import com.bowling.demo.model.Player;
+import com.bowling.demo.util.Node;
+import com.bowling.demo.util.Util;
 
 @Component
 public class PrinterImpl implements Printer {
 
 	@Override
 	public void print(List<Player> players) {
+		System.out.println();
+		print(fillFrame());
+		System.out.println();
 		for (Player player : players) {
+			System.out.println(player.getName());
 			String[][] data = formatData(player);
 			for (int i = 0; i < data.length; i++) {
 				for (int j = 0; j < data[i].length; j++) {
@@ -24,37 +30,70 @@ public class PrinterImpl implements Printer {
 	}
 
 	private String[][] formatData(Player player) {
-		String[][] data = createEmptyMatrix(3, 11);
-		data[0][0] = String.format("%-10s", player.getName());
-		data[1][0] = String.format("%-10s", "Pinfall");
-		data[2][0] = String.format("%-10s", "Score");
-		for (int i = 0; i < player.getFrames().size(); i++) {
-			Frame frame = player.getFrames().get(i);
-			if (frame.isLastFrame()) {
-				if (frame.getFirstPinFall().equals("10")) {
-					data[1][i + 1] = String.format("%-5s",
-							"X" + "  " + frame.getSecondPinFall() + "  " + frame.getThirdPinFall());
-				} else {
-					data[1][i + 1] = String.format("%-5s", frame.getFirstPinFall() + "  " + frame.getSecondPinFall());
-				}
-			} else {
-				if (frame.isStrike()) {
-					data[1][i + 1] = String.format("%-5s", "X");
-				} else {
-					data[1][i + 1] = String.format("%-5s", frame.getFirstPinFall() + "  " + frame.getSecondPinFall());
-				}
-			}
-		}
+		String[][] data = new String[2][11];
+		data[0][0] = String.format("%-10s", "Pinfall");
+		data[1][0] = String.format("%-10s", "Score");
+		Node<Frame> nodeFrame = player.getFrames().getHead();
+		fillPinfalls(data, nodeFrame);
+		fillScore(data, nodeFrame);
 		return data;
 	}
 
-	private String[][] createEmptyMatrix(int rows, int cols) {
-		String[][] data = new String[rows][cols];
-		for (int i = 0; i < data.length; i++) {
-			for (int j = 0; j < data[i].length; j++) {
-				data[i][j] = "";
+	private void fillPinfalls(String[][] data, Node<Frame> nodeFrame) {
+		for (int i = 1; i < data[0].length; i++) {
+			if (nodeFrame != null) {
+				String value = "";
+				int result = 0;
+				for (String pinfall : nodeFrame.getElement().getPinfalls()) {
+					if (nodeFrame.getElement().isStrike()) {
+						value += "X";
+					} else {
+						if (Util.isNumber(pinfall)) {
+							result += Integer.parseInt(pinfall);
+						}
+						if (result == 10) {
+							value += "/";
+						} else {
+							value += pinfall;
+						}
+					}
+				}
+				value = padding(value);
+				data[0][i] = value;
+				nodeFrame = nodeFrame.getNext();
 			}
 		}
-		return data;
+	}
+
+	private String padding(String value) {
+		String formatedValue = "";
+		for (char character : value.toCharArray()) {
+			formatedValue += String.format("%-" + (6 / value.length()) + "s", character);
+		}
+		return formatedValue;
+	}
+
+	private void fillScore(String[][] data, Node<Frame> nodeFrame) {
+		for (int i = 1; i < data[1].length; i++) {
+			if (nodeFrame != null) {
+				data[1][i] = String.format("%-6s", nodeFrame.getElement().getTotalScore());
+				nodeFrame = nodeFrame.getNext();
+			}
+		}
+	}
+
+	private String[] fillFrame() {
+		String[] frame = new String[11];
+		frame[0] = String.format("%-10s", "Frame");
+		for (int i = 1; i < frame.length; i++) {
+			frame[i] = String.format("%-6s", i);
+		}
+		return frame;
+	}
+
+	private void print(String[] data) {
+		for (int i = 0; i < data.length; i++) {
+			System.out.print(data[i]);
+		}
 	}
 }

@@ -6,5 +6,5 @@ import com.bowling.demo.model.Player;
 
 public interface Printer {
 
-	public void print(List<Player> players);
+	void print(List<Player> players);
 }

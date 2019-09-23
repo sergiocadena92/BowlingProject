@@ -1,20 +1,20 @@
 package com.bowling.demo.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bowling.demo.util.Util;
+
 public class Frame {
 	private int chance;
 	private boolean strike;
-	private boolean lastFrame;
-	private String[] pinfalls;
+	private List<String> pinfalls;
 	private int score;
+	private int totalScore;
 
 	public Frame(int chance) {
 		this.chance = chance;
-		pinfalls = new String[3];
-		if (chance == 10) {
-			this.lastFrame = true;
-		} else {
-			this.lastFrame = false;
-		}
+		pinfalls = new ArrayList<>(3);
 	}
 
 	public int getChance() {
@@ -33,47 +33,40 @@ public class Frame {
 		this.strike = strike;
 	}
 
-	public boolean isLastFrame() {
-		return lastFrame;
-	}
-
-	public void setLastFrame(boolean lastFrame) {
-		this.lastFrame = lastFrame;
-	}
-
-	public void setFirstPinFall(String score) {
-		this.pinfalls[0] = score;
-	}
-
-	public String getFirstPinFall() {
-		return this.pinfalls[0];
-	}
-
-	public void setSecondPinFall(String score) {
-		this.pinfalls[1] = score;
-	}
-
-	public String getSecondPinFall() {
-		return this.pinfalls[1];
-	}
-
-	public String getThirdPinFall() {
-		return this.pinfalls[2];
-	}
-
-	public boolean isSecondPinFall() {
-		return this.pinfalls[1] != null;
-	}
-
-	public void setThirdPinFall(String score) {
-		this.pinfalls[2] = score;
-	}
-
 	public void setStrike() {
-		this.pinfalls[0] = "";
-		this.pinfalls[1] = "10";
+		this.pinfalls.add("10");
 		this.strike = true;
+		this.score = 10;
 
+	}
+
+	public void addPinfall(String pinfall) {
+		this.pinfalls.add(pinfall);
+		this.score += Util.isNumber(pinfall) ? Integer.parseInt(pinfall) : 0;
+	}
+
+	public int getFirstPinfallScore() {
+		return Util.isNumber(pinfalls.get(0)) ? Integer.parseInt(pinfalls.get(0)) : 0;
+	}
+
+	public int getFistTwoPinfalls() {
+		int counter = 0;
+		int result = 0;
+		for (String pinfall : pinfalls) {
+			if (counter < 2 && Util.isNumber(pinfall)) {
+				result += Integer.parseInt(pinfall);
+				counter++;
+			}
+		}
+		return result;
+	}
+
+	public List<String> getPinfalls() {
+		return new ArrayList<>(pinfalls);
+	}
+
+	public int getPinfallSize() {
+		return this.pinfalls.size();
 	}
 
 	public int getScore() {
@@ -82,5 +75,13 @@ public class Frame {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public int getTotalScore() {
+		return totalScore;
+	}
+
+	public void setTotalScore(int totalScore) {
+		this.totalScore = totalScore;
 	}
 }

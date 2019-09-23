@@ -6,7 +6,7 @@ public class Player {
 
 	private String name;
 	private DoublyLinkedList<Frame> frames;
-	
+
 	public Player(String name) {
 		this.name = name;
 		this.frames = new DoublyLinkedList<>();
