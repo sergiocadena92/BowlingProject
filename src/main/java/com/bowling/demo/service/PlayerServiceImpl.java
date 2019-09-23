@@ -45,7 +45,7 @@ public class PlayerServiceImpl implements PlayerService {
 					} else {
 						Frame frame = new Frame(tail.getElement().getChance() + 1);
 						frame.addPinfall(pinfall);
-						frame.setStrike(pinfall.equals(STRIKE_SCORE) ? true : false);
+						frame.setStrike(pinfall.equals(STRIKE_SCORE));
 						player.addFrame(frame);
 					}
 				} else {
@@ -54,7 +54,7 @@ public class PlayerServiceImpl implements PlayerService {
 					} else {
 						Frame frame = new Frame(tail.getElement().getChance() + 1);
 						frame.addPinfall(pinfall);
-						frame.setStrike(pinfall.equals(STRIKE_SCORE) ? true : false);
+						frame.setStrike(pinfall.equals(STRIKE_SCORE));
 						player.addFrame(frame);
 					}
 				}
@@ -71,8 +71,7 @@ public class PlayerServiceImpl implements PlayerService {
 				data.put(playerName, player);
 			}
 		}
-		List<Player> playersScore = calculateScore(data.values().stream().collect(Collectors.toList()));
-		return playersScore;
+		return calculateScore(data.values().stream().collect(Collectors.toList()));
 	}
 
 	private List<Player> calculateScore(List<Player> players) {

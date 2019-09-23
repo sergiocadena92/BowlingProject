@@ -13,7 +13,7 @@ public class DoublyLinkedList<T> {
 	}
 
 	public void add(T element) {
-		Node<T> newElement = new Node<T>(element);
+		Node<T> newElement = new Node<>(element);
 		if (isEmpty()) {
 			head = newElement;
 			tail = newElement;

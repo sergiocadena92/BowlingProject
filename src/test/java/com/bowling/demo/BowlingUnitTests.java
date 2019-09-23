@@ -33,11 +33,11 @@ public class BowlingUnitTests {
 		list.add("Third element");
 		
 		Node<String> element = list.getHead();
-		assertEquals(element.getElement(), "Fist element");
+		assertEquals("Fist element", element.getElement());
 		element = element.getNext();
-		assertEquals(element.getElement(), "Second element");
+		assertEquals("Second element", element.getElement());
 		element = element.getNext();
-		assertEquals(element.getElement(), "Third element");
+		assertEquals("Third element", element.getElement());
 	}
 	
 	@Test
@@ -47,7 +47,7 @@ public class BowlingUnitTests {
 		list.add("Second element");
 		list.add("Third element");
 		
-		assertEquals(list.getHead().getElement(), "Fist element");
+		assertEquals("Fist element", list.getHead().getElement());
 	}
 	
 	@Test

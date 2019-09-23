@@ -42,35 +42,35 @@ public class PrinterImpl implements Printer {
 	private void fillPinfalls(String[][] data, Node<Frame> nodeFrame) {
 		for (int i = 1; i < data[0].length; i++) {
 			if (nodeFrame != null) {
-				String value = "";
+				StringBuilder value = new StringBuilder();
 				int result = 0;
 				for (String pinfall : nodeFrame.getElement().getPinfalls()) {
 					if (nodeFrame.getElement().isStrike()) {
-						value += "X";
+						value.append("X");
 					} else {
 						if (Util.isNumber(pinfall)) {
 							result += Integer.parseInt(pinfall);
 						}
 						if (result == 10) {
-							value += "/";
+							value.append("/");
 						} else {
-							value += pinfall;
+							value.append(pinfall);
 						}
 					}
 				}
-				value = padding(value);
-				data[0][i] = value;
+				String formatedValue = padding(value.toString());
+				data[0][i] = formatedValue;
 				nodeFrame = nodeFrame.getNext();
 			}
 		}
 	}
 
 	private String padding(String value) {
-		String formatedValue = "";
+		StringBuilder formatedValue = new StringBuilder();
 		for (char character : value.toCharArray()) {
-			formatedValue += String.format("%-" + (6 / value.length()) + "s", character);
+			formatedValue.append(String.format("%-" + (6 / value.length()) + "s", character));
 		}
-		return formatedValue;
+		return formatedValue.toString();
 	}
 
 	private void fillScore(String[][] data, Node<Frame> nodeFrame) {
