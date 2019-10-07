@@ -1,5 +1,8 @@
 package com.bowling.demo.service;
 
+import static com.bowling.demo.enumeration.Constant.LINE_SEPARATOR;
+import static com.bowling.demo.enumeration.Constant.STRIKE_SCORE;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +21,6 @@ import com.bowling.demo.util.Util;
 @Service
 public class PlayerServiceImpl implements PlayerService {
 
-	private static final String STRIKE_SCORE = "10";
-	private static final String LINE_SEPARATOR = "\\t";
 	private final FileReader fileReader;
 
 	@Autowired
@@ -30,9 +31,10 @@ public class PlayerServiceImpl implements PlayerService {
 	@Override
 	public List<Player> parseDataFromFile(String pathFile) throws BowlingException {
 		List<String> lines = fileReader.readFile(pathFile);
+		Map<String, Integer> throwsByPlayer = Util.getTthrowsByPlayer(lines);
 		Map<String, Player> data = new HashMap<>();
 		for (String line : lines) {
-			String[] playerPinfall = line.split(LINE_SEPARATOR);
+			String[] playerPinfall = line.split(LINE_SEPARATOR.getValue());
 			String playerName = playerPinfall[0];
 			String pinfall = playerPinfall[1];
 			checkData(pinfall);
@@ -40,12 +42,12 @@ public class PlayerServiceImpl implements PlayerService {
 				Player player = data.get(playerName);
 				Node<Frame> tail = player.getFrames().getTail();
 				if (tail.getElement().isStrike()) {
-					if (tail.getElement().getChance() == 10) {
+					if (tail.getElement().getChance() == throwsByPlayer.get(playerName)) {
 						tail.getElement().addPinfall(pinfall);
 					} else {
 						Frame frame = new Frame(tail.getElement().getChance() + 1);
 						frame.addPinfall(pinfall);
-						frame.setStrike(pinfall.equals(STRIKE_SCORE));
+						frame.setStrike(pinfall.equals(STRIKE_SCORE.getValue()));
 						player.addFrame(frame);
 					}
 				} else {
@@ -54,13 +56,13 @@ public class PlayerServiceImpl implements PlayerService {
 					} else {
 						Frame frame = new Frame(tail.getElement().getChance() + 1);
 						frame.addPinfall(pinfall);
-						frame.setStrike(pinfall.equals(STRIKE_SCORE));
+						frame.setStrike(pinfall.equals(STRIKE_SCORE.getValue()));
 						player.addFrame(frame);
 					}
 				}
 			} else {
 				Frame frame = new Frame(1);
-				if (pinfall.equals(STRIKE_SCORE)) {
+				if (pinfall.equals(STRIKE_SCORE.getValue())) {
 					frame.setStrike();
 				} else {
 					frame.addPinfall(pinfall);
@@ -71,10 +73,11 @@ public class PlayerServiceImpl implements PlayerService {
 				data.put(playerName, player);
 			}
 		}
-		return calculateScore(data.values().stream().collect(Collectors.toList()));
+		return data.values().stream().collect(Collectors.toList());
 	}
 
-	private List<Player> calculateScore(List<Player> players) {
+	@Override
+	public List<Player> calculateScore(List<Player> players) {
 		for (Player player : players) {
 			Node<Frame> currentFrame = player.getFrames().getHead();
 			while (currentFrame != null) {

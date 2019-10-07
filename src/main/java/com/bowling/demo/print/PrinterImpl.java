@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.bowling.demo.exception.BowlingException;
 import com.bowling.demo.model.Frame;
 import com.bowling.demo.model.Player;
 import com.bowling.demo.util.Node;
@@ -13,9 +14,10 @@ import com.bowling.demo.util.Util;
 public class PrinterImpl implements Printer {
 
 	@Override
-	public void print(List<Player> players) {
+	public void print(List<Player> players) throws BowlingException {
 		System.out.println();
-		print(fillFrame());
+		Player frameSize = players.stream().findFirst().orElseThrow(()-> new BowlingException("Player list cannot be empty"));
+		print(fillFrame(frameSize.getFrames().getSize()));
 		System.out.println();
 		for (Player player : players) {
 			System.out.println(player.getName());
@@ -30,7 +32,7 @@ public class PrinterImpl implements Printer {
 	}
 
 	private String[][] formatData(Player player) {
-		String[][] data = new String[2][11];
+		String[][] data = new String[2][player.getFrames().getSize() + 1];
 		data[0][0] = String.format("%-10s", "Pinfall");
 		data[1][0] = String.format("%-10s", "Score");
 		Node<Frame> nodeFrame = player.getFrames().getHead();
@@ -82,8 +84,8 @@ public class PrinterImpl implements Printer {
 		}
 	}
 
-	private String[] fillFrame() {
-		String[] frame = new String[11];
+	private String[] fillFrame(int size) {
+		String[] frame = new String[size + 1];
 		frame[0] = String.format("%-10s", "Frame");
 		for (int i = 1; i < frame.length; i++) {
 			frame[i] = String.format("%-6s", i);

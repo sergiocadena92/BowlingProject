@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.bowling</groupId>
 	<artifactId>Bowling</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>Bowling</name>
 	<description>Demo project for Bowling Test</description>
 

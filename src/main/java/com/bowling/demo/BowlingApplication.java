@@ -41,7 +41,8 @@ public class BowlingApplication implements ApplicationRunner {
 			filePath = resource.getFile().getPath();
 		}
 		logger.info("Application started with command line arguments: ", filePath);
-		List<Player> data = playerService.parseDataFromFile(filePath);
+		List<Player> players = playerService.parseDataFromFile(filePath);
+		List<Player> data = playerService.calculateScore(players);
 		printer.print(data);
 	}
 }

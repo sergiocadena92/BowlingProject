@@ -8,4 +8,6 @@ import com.bowling.demo.model.Player;
 public interface PlayerService {
 
 	List<Player> parseDataFromFile(String pathFile) throws BowlingException;
+
+	List<Player> calculateScore(List<Player> players);
 }
